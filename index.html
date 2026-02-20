@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <h1>Gissa Flaggan Spelet</h1>
+        <div id="flag">
+
+        </div>
+
+        <div class="guess">
+            <p>Your Guess: <span id="my-guess">123</span></p>
+            <button id="next-flag">Nästa Flagga</button>
+        </div>
+
+        <div id="info">
+            <h2>Fun Fact om "landet"</h2>
+
+            <div>
+                <h3>Namn:</h3>
+                <p id="country-name">name (official) / nameNative (officialNative)</p>
+            </div>
+
+            <div>
+                <h3>Top Level Domain</h3>
+                <div id="top-level-domain">
+                    <p>.ee</p>
+                    <p>.se</p>
+                </div>
+            </div>
+
+            <div>
+                <h3>Valutor</h3>
+                <div id="currencies">
+                    <p>symbol, namn</p>
+                    <p>symbol, namn</p>
+                </div>
+            </div>
+
+            <div>
+                <h3>Telefon Suffixes</h3>
+                <div id="telephone-suffix">
+                    <p>+3 72</p>
+                    <p>+3 71</p>
+                </div>
+            </div>
+
+            <div>
+                <h3>Huvudstad</h3>
+                <div id="capital">
+                    <p>namn</p>
+                    <p>namn</p>
+                </div>
+            </div>
+
+            <div>
+                <h3>Region</h3>
+                <p id="region">region (subRegion)</p>
+            </div>
+
+            <div>
+                <h3>Språk</h3>
+                <div id="languages">
+                    <p>namn</p>
+                    <p>namn</p>
+                </div>
+            </div>
+
+            <div>
+                <h3>Innevånare</h3>
+                <p id="population">1369995</p>
+            </div>
+
+            <div>
+                <h3>Vapensköld Flagga</h3>
+                <img id="coat-of-arms-flag" src="https://mainfacts.com/media/images/coats_of_arms/ee.png" alt="">
+            </div>
+        </div>
+    </main>
+
+    <template id="flag-template">
+        <h2>Flaggan:</h2>
+        <img src="https://flagcdn.com/w320/va.png" alt="The flag of Vatican City is square shaped. It is composed of two equal vertical bands of yellow and white, with national coat of arms centered in the white band. The national coat of arms comprises the Papal Tiara superimposed on two crossed keys">
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>
