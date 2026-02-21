@@ -11,6 +11,7 @@ var info;
 let canNextFlag;
 let input = "";
 const invalidKeys = [
+    "Dead",
     "Alt",
     "AltGraph",
     "Control",
@@ -31,23 +32,52 @@ document.addEventListener("DOMContentLoaded", function() {
     myGuess = document.getElementById("my-guess");
     nextFlagBtn = document.getElementById("next-flag");
     info = document.getElementById("info");
+
+    myGuess.addEventListener("input", function(event) {
+        if (canNextFlag) {
+            event.preventDefault();
+            return;
+        }
+
+        input = event.target.value;
+
+        if (myGuess.value.toLowerCase() == data[cur].name.common.toLowerCase()) {
+            myGuess.disabled = true;
+            canNextFlag = true;
+            showFunFact();
+        }
+    })
     
     document.body.addEventListener("keydown", function(event) {
-        if (event.key == "Backspace") {
-            input = input.slice(0, -1);
-        }
-        else if (event.key == "Enter") {
+        if (event.key == "Enter") {
             if (canNextFlag) {
                 nextFlag();
+                return;
             }
+        }
+
+        if (canNextFlag) {
+            return;
+        }
+
+        if (event.target == myGuess) {
+            return;
+        }
+        else if (event.key === " ") {
+            event.preventDefault();
+        }
+
+        if (event.key == "Backspace") {
+            input = input.slice(0, -1);
         }
         else if (!invalidKeys.includes(event.key)) {
             input += event.key;
         }
 
-        myGuess.textContent = input;
+        myGuess.value = input;
 
         if (input.toLowerCase() == data[cur].name.common.toLowerCase()) {
+            myGuess.disabled = true;
             canNextFlag = true;
             showFunFact();
         }
@@ -69,11 +99,12 @@ async function fetchData() {
 }
 
 function getNextFlag() {
-    const randomNr = Math.floor(Math.random() * data.length);    
-    if (flagsDone.includes(randomNr)) {
-        return getNextFlag();
-    }
-    return randomNr;
+    return 143;
+    // const randomNr = Math.floor(Math.random() * data.length);    
+    // if (flagsDone.includes(randomNr)) {
+    //     return getNextFlag();
+    // }
+    // return randomNr;
 }
 
 function nextFlag() {
@@ -95,7 +126,8 @@ function nextFlag() {
     flag.appendChild(clone);
 
     input = "";
-    myGuess.textContent = "";
+    myGuess.disabled = false;
+    myGuess.value = "";
 
     showFunFact();
 }
@@ -112,7 +144,9 @@ async function showFunFact() {
     let allData = countryData[0];
 
     const countryName = document.getElementById("country-name");
-    countryName.textContent = `${allData.name.common} (${allData.name.official})`;
+    const countryName2 = document.getElementById("country-name-2");
+    countryName.textContent = allData.name.common;
+    countryName2.textContent = `${allData.name.common} (${allData.name.official})`;
 
     allData.tld = allData.tld || []
     const topLevelDomain = document.getElementById("top-level-domain");
@@ -144,7 +178,6 @@ async function showFunFact() {
     }
 
 
-    console.log(allData.idd)
     allData.idd = allData.idd || {}
     const telephoneSuffix = document.getElementById("telephone-suffix");
     telephoneSuffix.innerHTML = "";
