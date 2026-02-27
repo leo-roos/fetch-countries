@@ -9,6 +9,38 @@
 <body>
     <main>
         <h1>Gissa Flaggan Spelet</h1>
+
+        <h2>Stats:</h2>
+        <div class="stats">
+            <div>
+                <h3>Points</h3>
+                <p>
+                    <span id="points-value">10</span>
+                </p>
+            </div>
+            <div>
+                <h3>Level</h3>
+                <p>
+                    <span id="level-value">1</span>
+                </p>
+            </div>
+            <div>
+                <h3>XP</h3>
+                <p>
+                    <span id="xp-value">1</span>
+                    /
+                    <span id="xp-next-value">100</span>
+                </p>
+            </div>
+            <!-- <div>
+                <h3>Streak</h3>
+                <p>
+                    <span id="streak-value">5</span>
+                </p>
+            </div> -->
+        </div>
+
+        <h2>Flaggan:</h2>
         <div id="flag">
 
         </div>
@@ -90,10 +122,10 @@
     </main>
 
     <template id="flag-template">
-        <h2>Flaggan:</h2>
         <img src="https://flagcdn.com/w320/va.png" alt="The flag of Vatican City is square shaped. It is composed of two equal vertical bands of yellow and white, with national coat of arms centered in the white band. The national coat of arms comprises the Papal Tiara superimposed on two crossed keys">
     </template>
 
+    <script src="stats.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

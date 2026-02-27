@@ -1,5 +1,6 @@
 var flagsDone = [];
 var data;
+var funFactData;
 var cur = -1;
 
 var flag;
@@ -33,6 +34,17 @@ document.addEventListener("DOMContentLoaded", function() {
     nextFlagBtn = document.getElementById("next-flag");
     info = document.getElementById("info");
 
+    nextFlagBtn.disabled = true;
+
+    function checkRightAnswer(guess) {
+        if (guess.toLowerCase() == data[cur].name.common.toLowerCase() || guess.toLowerCase() == data[cur].name.official.toLowerCase()) {
+            return true;
+        }
+
+        return false;
+    }
+
+
     myGuess.addEventListener("input", function(event) {
         if (canNextFlag) {
             event.preventDefault();
@@ -41,9 +53,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         input = event.target.value;
 
-        if (myGuess.value.toLowerCase() == data[cur].name.common.toLowerCase()) {
+        console.log(myGuess.value)
+        if (checkRightAnswer(myGuess.value)) {
             myGuess.disabled = true;
             canNextFlag = true;
+            nextFlagBtn.disabled = false;
             showFunFact();
         }
     })
@@ -76,9 +90,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         myGuess.value = input;
 
-        if (input.toLowerCase() == data[cur].name.common.toLowerCase()) {
+        if (checkRightAnswer(input)) {
             myGuess.disabled = true;
             canNextFlag = true;
+            nextFlagBtn.disabled = false;
             showFunFact();
         }
     })
@@ -99,16 +114,17 @@ async function fetchData() {
 }
 
 function getNextFlag() {
-    return 143;
-    // const randomNr = Math.floor(Math.random() * data.length);    
-    // if (flagsDone.includes(randomNr)) {
-    //     return getNextFlag();
-    // }
-    // return randomNr;
+    // return 143;
+    const randomNr = Math.floor(Math.random() * data.length);    
+    if (flagsDone.includes(randomNr)) {
+        return getNextFlag();
+    }
+    return randomNr;
 }
 
-function nextFlag() {
+async function nextFlag() {
     canNextFlag = false;
+    nextFlagBtn.disabled = true;
     hideFunFact();
 
     const nextFlagNr = getNextFlag();
@@ -129,7 +145,12 @@ function nextFlag() {
     myGuess.disabled = false;
     myGuess.value = "";
 
-    showFunFact();
+    
+    const res = await fetch(`https://restcountries.com/v3.1/name/${data[cur].name.common}`);
+    let countryData = await res.json();
+    funFactData = countryData[0];
+
+    // showFunFact();
 }
 
 function hideFunFact() {
@@ -138,21 +159,19 @@ function hideFunFact() {
 }
 
 async function showFunFact() {
-    const res = await fetch(`https://restcountries.com/v3.1/name/${data[cur].name.common}`);
-    let countryData = await res.json();
+    addXP(10);
 
-    let allData = countryData[0];
 
     const countryName = document.getElementById("country-name");
     const countryName2 = document.getElementById("country-name-2");
-    countryName.textContent = allData.name.common;
-    countryName2.textContent = `${allData.name.common} (${allData.name.official})`;
+    countryName.textContent = funFactData.name.common;
+    countryName2.textContent = `${funFactData.name.common} (${funFactData.name.official})`;
 
-    allData.tld = allData.tld || []
+    funFactData.tld = funFactData.tld || []
     const topLevelDomain = document.getElementById("top-level-domain");
     topLevelDomain.innerHTML = "";
-    for (let index = 0; index < allData.tld.length; index++) {
-        const tld = allData.tld[index];
+    for (let index = 0; index < funFactData.tld.length; index++) {
+        const tld = funFactData.tld[index];
         const p = document.createElement("p");
         p.textContent = tld;
 
@@ -160,12 +179,12 @@ async function showFunFact() {
     }
     
 
-    allData.currencies = allData.currencies || {}
+    funFactData.currencies = funFactData.currencies || {}
     const currencies = document.getElementById("currencies");
     currencies.innerHTML = "";
-    for (const key in allData.currencies) {
-        if (!Object.hasOwn(allData.currencies, key)) continue;
-        const currency = allData.currencies[key];
+    for (const key in funFactData.currencies) {
+        if (!Object.hasOwn(funFactData.currencies, key)) continue;
+        const currency = funFactData.currencies[key];
         
         const p = document.createElement("p");
         p.textContent = `${currency.name} `;
@@ -178,23 +197,24 @@ async function showFunFact() {
     }
 
 
-    allData.idd = allData.idd || {}
+    funFactData.idd = funFactData.idd || {}
+    funFactData.idd.suffixes = funFactData.idd.suffixes || []
     const telephoneSuffix = document.getElementById("telephone-suffix");
     telephoneSuffix.innerHTML = "";
-    for (let index = 0; index < allData.idd.suffixes.length; index++) {
-        const value = allData.idd.suffixes[index];
+    for (let index = 0; index < funFactData.idd.suffixes.length; index++) {
+        const value = funFactData.idd.suffixes[index];
         const p = document.createElement("p");
-        p.textContent = `${allData.idd.root} ${value}`;
+        p.textContent = `${funFactData.idd.root}${value}`;
 
         telephoneSuffix.append(p);
     }
 
     
-    allData.capital = allData.capital || []
+    funFactData.capital = funFactData.capital || []
     const capital = document.getElementById("capital");
     capital.innerHTML = "";
-    for (let index = 0; index < allData.capital.length; index++) {
-        const value = allData.capital[index];
+    for (let index = 0; index < funFactData.capital.length; index++) {
+        const value = funFactData.capital[index];
         const p = document.createElement("p");
         p.textContent = value;
 
@@ -202,15 +222,15 @@ async function showFunFact() {
     }
 
     const region = document.getElementById("region");
-    region.textContent = `${allData.region} (${allData.subregion})`;
+    region.textContent = `${funFactData.region} (${funFactData.subregion})`;
 
 
-    allData.languages = allData.languages || {}
+    funFactData.languages = funFactData.languages || {}
     const languages = document.getElementById("languages");
     languages.innerHTML = "";
-     for (const key in allData.languages) {
-        if (!Object.hasOwn(allData.languages, key)) continue;
-        const value = allData.languages[key];
+     for (const key in funFactData.languages) {
+        if (!Object.hasOwn(funFactData.languages, key)) continue;
+        const value = funFactData.languages[key];
         
         const p = document.createElement("p");
         p.textContent = `${value}`;
@@ -219,11 +239,11 @@ async function showFunFact() {
     }
 
     const population = document.getElementById("population");
-    population.textContent = Intl.NumberFormat("sv-SE").format(allData.population);
+    population.textContent = Intl.NumberFormat("sv-SE").format(funFactData.population);
     
 
     const coatOfArmsFlag = document.getElementById("coat-of-arms-flag");
-    coatOfArmsFlag.src = allData.coatOfArms.png;
+    coatOfArmsFlag.src = funFactData.coatOfArms.png;
 
     info.classList.add("show");
 }

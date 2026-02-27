@@ -23,6 +23,19 @@ main {
   align-items: center;
 }
 
+.stats {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.stats div {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.7490196078);
+  border-radius: 5px;
+}
+
 .guess {
   display: flex;
   flex-direction: column;
@@ -44,16 +57,26 @@ main {
 #info {
   display: none;
 }
-
 #info.show {
   display: flex;
 }
 
+@keyframes showInfo {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
 #info {
   flex-direction: column;
   gap: 10px;
   max-width: 1000px;
   min-width: 300px;
+  animation: showInfo 1s forwards;
 }
 
 #info article {
@@ -85,10 +108,12 @@ main {
 #info article img {
   background-color: #fff;
   padding: 15px;
+}
+#info article div p, #info article img {
   cursor: crosshair;
   transition: 0.15s ease-in-out;
 }
-#info article img:hover {
+#info article div p:hover, #info article img:hover {
   scale: 1.1;
 }
 
@@ -110,13 +135,16 @@ button {
   cursor: pointer;
   transition: 0.15s ease-in-out;
 }
-button:hover {
+button:not(:disabled):hover {
   background-color: #000;
   scale: 1.05;
 }
-button:active {
+button:not(:disabled):active {
   background-color: #000;
   scale: 1.02;
+}
+button:disabled {
+  cursor: not-allowed;
 }
 
 input:disabled {
